@@ -20,7 +20,11 @@
   "homepage": "https://github.com/epg323/Contract-Butler#readme",
   "dependencies": {
     "@dfuse/client": "^0.3.17",
+    "dotenv": "^8.2.0",
+    "eosjs": "^21.0.3",
+    "node-fetch": "^2.6.1",
     "nodemon": "^2.0.7",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "ws": "^7.4.3"
   }
 }
