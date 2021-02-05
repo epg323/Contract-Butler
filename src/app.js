@@ -3,11 +3,14 @@ global.fetch = require("node-fetch");
 global.WebSocket = require("ws");
 const {dfuseClient, createDfuseClient} = require("@dfuse/client");
 const {api,rpc} = require("./eosjs/api");
-const getBlock = require("./eosjs/getBlock");
+const {getBlock, getAccount, getCode, txn} = require("./eosjs/getBlock");
 
 const {DFUSE_API_KEY, DFUSE_NETWORK} = process.env;
 
-getBlock(rpc).then(data => console.log("this is the data:",data))
+//getBlock(rpc).then(data => console.log("this is the data:",data))
+getAccount(rpc, "mindswaplimt").then(data => console.log("this is the data", data))
+getCode(rpc, "mindswaplimt").then(data => console.log("this is the code", JSON.stringify(data.abi), data.abi.structs[8].fields))
+txn(api, 'mindswaplimt')
 const client = createDfuseClient({
     apiKey: DFUSE_API_KEY,
     network:'eos.dfuse.eosnation.io'// DFUSE_NETWORK 

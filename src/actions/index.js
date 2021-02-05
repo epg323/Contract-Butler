@@ -1,16 +1,4 @@
-const getBlock = async (rpc)=>{
-    return await rpc.get_block(1)
-};
-
-const getAccount = async (rpc, contract)=>{
-    return await rpc.get_account(contract);
-};
-
-const getCode = async (rpc, contract) => {
-    return await rpc.get_code(contract);
-}
-
-const txn = async (api, contract) => {
+const open = async (api, contract) => {
     console.log("contract", contract)
     await api.transact({
        actions:[ 
@@ -38,4 +26,6 @@ const txn = async (api, contract) => {
     console.log("completed")
 }
 
-module.exports = {getBlock, getAccount, getCode,txn};
+const
+
+module.exports = {open, close, withdraw, crtlmtbuy, crtlmtsell, clslmtbuy, clslmtsell }
