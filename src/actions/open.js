@@ -1,17 +1,4 @@
-const getBlock = async (rpc) => {
-  return await rpc.get_block(1);
-};
-
-const getAccount = async (rpc, contract) => {
-  return await rpc.get_account(contract);
-};
-
-const getCode = async (rpc, contract) => {
-  return await rpc.get_code(contract);
-};
-
-const txn = async (api, contract) => {
-  console.log("contract", contract);
+const open = async (api, contract) => {
   await api.transact(
     {
       actions: [
@@ -27,8 +14,8 @@ const txn = async (api, contract) => {
           data: {
             owner: "bravocharlie",
             token: {
-              contract: "eosio.token",
-              sym: "4,EOS",
+              contract: "everipediaiq",
+              sym: "3,IQ",
             },
             ram_payer: "bravocharlie",
           },
@@ -43,4 +30,4 @@ const txn = async (api, contract) => {
   console.log("completed");
 };
 
-module.exports = { getBlock, getAccount, getCode, txn };
+module.exports = open;

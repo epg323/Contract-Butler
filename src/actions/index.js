@@ -1,31 +1,19 @@
-const open = async (api, contract) => {
-    console.log("contract", contract)
-    await api.transact({
-       actions:[ 
-           {account: contract,
-        name:'open',
-        authorization:[{
-          actor:'bravocharlie',
-          permission: 'active'
-        }],
-        data:{
-          owner:'bravocharlie',
-          token:{
-              contract:'eosio.token',
-              sym:'4,EOS'
-            },
-          ram_payer:'bravocharlie'
-        }}
-    ]
-    },
-    {
-        blocksBehind: 3,
-        expireSeconds: 30,
-      }
-    );
-    console.log("completed")
-}
+const open = require("./open");
+const close = require("./close");
+const withdraw = require("./withdraw");
+const crtlmtbuy = require("./crtlmtbuy");
+const crtlmtsell = require("./crtlmtsell");
+const clslmtbuy = require("./clslmtbuy");
+const clslmtsell = require("./clslmtsell");
+const transfer = require("./transfer");
 
-const
-
-module.exports = {open, close, withdraw, crtlmtbuy, crtlmtsell, clslmtbuy, clslmtsell }
+module.exports = {
+  open,
+  close,
+  withdraw,
+  transfer,
+  crtlmtbuy,
+  crtlmtsell,
+  clslmtbuy,
+  clslmtsell,
+};
