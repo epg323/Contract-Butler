@@ -1,10 +1,10 @@
-const clslmtsell = async (api, contract) => {
+const clslmtsell = async (api, contract, id, mrktId) => {
   await api.transact(
     {
       actions: [
         {
           account: contract,
-          name: "",
+          name: "clslmtsell",
           authorization: [
             {
               actor: bravoCharlie,
@@ -12,8 +12,8 @@ const clslmtsell = async (api, contract) => {
             },
           ],
           data: {
-            id: "",
-            market_id: "",
+            id: id,
+            market_id: mrktId,
           },
         },
       ],

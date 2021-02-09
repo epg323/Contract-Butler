@@ -1,9 +1,9 @@
-const transfer = async (api, contract) => {
+const transfer = async (api, contract, tokenContract, from, qty) => {
   await api.transact(
     {
       actions: [
         {
-          account: "eosio.token", //changes on the currency
+          account: tokenContract, 
           name: "transfer",
           authorization: [
             {
@@ -12,10 +12,10 @@ const transfer = async (api, contract) => {
             },
           ],
           data: {
-            from: "bravocharlie",
+            from: from,
             to: contract,
-            quantity: "5.0000 EOS", //change
-            memo: "generous donation", //change
+            quantity: qty,
+            memo: `Sent ${qty} from ${from} to ${to}`,
           },
         },
       ],

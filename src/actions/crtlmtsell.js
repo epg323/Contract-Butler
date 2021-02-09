@@ -1,4 +1,4 @@
-const crtlmtsell = async (api, contract) => {
+const crtlmtsell = async (api, contract, txnOwner, tokenContract1, tokenContract2, tokenSym1, tokenSym2) => {
   await api.transact(
     {
       actions: [
@@ -12,14 +12,14 @@ const crtlmtsell = async (api, contract) => {
             },
           ],
           data: {
-            owner: "bravocharlie",
+            owner: txnOwner,
             price: {
-              contract: "eosio.token",
-              quantity: "1.0000 EOS",
+              contract: tokenContract1,
+              quantity: tokenSym1,
             },
             volume: {
-              contract: "everipediaiq",
-              quantity: "5.000 IQ",
+              contract: tokenContract2,
+              quantity: tokenSym2,
             },
           },
         },

@@ -1,4 +1,4 @@
-const open = async (api, contract) => {
+const open = async (api, contract, txnOwner, txnOwner, tokenContract, tokenSym, ramPayer) => {
   await api.transact(
     {
       actions: [
@@ -12,12 +12,12 @@ const open = async (api, contract) => {
             },
           ],
           data: {
-            owner: "bravocharlie",
+            owner: txnOwner,
             token: {
-              contract: "everipediaiq",
-              sym: "3,IQ",
+              contract: tokenContract,
+              sym: tokenSym,
             },
-            ram_payer: "bravocharlie",
+            ram_payer: ramPayer,
           },
         },
       ],
@@ -27,7 +27,6 @@ const open = async (api, contract) => {
       expireSeconds: 30,
     }
   );
-  console.log("completed");
 };
 
 module.exports = open;

@@ -1,4 +1,4 @@
-const close = async (api, contract) => {
+const close = async (api, contract, txnOwner, tokenContract, tokenSym) => {
   api.transact(
     {
       actions: [
@@ -12,10 +12,10 @@ const close = async (api, contract) => {
             },
           ],
           data: {
-            owner: "bravocharlie",
+            owner: txnOwner,
             token: {
-              contract: "eosio.token",
-              sym: "4,EOS",
+              contract: tokenContract,
+              sym: tokenSym,
             },
           },
         },
