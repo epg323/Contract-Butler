@@ -7,8 +7,8 @@ const tokens = [
         marketId: -1,
         side: null,
         allowedTrades: [
-            {token: "NOMSWAP", pool: "IQYTRMP", precision: 3},
-            {token: "YEMSWAP", pool: "IQNTRMP", precision: 3},
+            {token: "NOMSWAP", pool: "INMSWAP", precision: 3},
+            {token: "YEMSWAP", pool: "IYMSWAP", precision: 3},
         ],
         isDefault: true,
         isSelected: false,

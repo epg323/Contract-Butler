@@ -32,11 +32,22 @@ const getSupply = async (rpc, contract,pool) => {
   })
 }
 
-const getSellOrders = async (rpc, contract) => {
+const getSellOrders = async (rpc, contract, marketId) => {
   return await rpc.get_table_rows({
     code: contract,
-    scope: '0',
+    scope: marketId,
     table:'sellorders',
+    json:true,
+    limit:250,
+    reverse:true,
+  })
+}
+
+const getBuyOrders = async (rpc, contract, marketId) => {
+  return await rpc.get_table_rows({
+    code: contract,
+    scope: marketId,
+    table:'buyorders',
     json:true,
     limit:250,
     reverse:true,
@@ -54,4 +65,4 @@ const getMarkets = async (rpc, contract) => {
   })
 }
 
-module.exports = { getBlock, getAccount, getCode, getTransfers, getSupply, getSellOrders, getMarkets };
+module.exports = { getBlock, getAccount, getCode, getTransfers, getSupply, getSellOrders, getBuyOrders, getMarkets };

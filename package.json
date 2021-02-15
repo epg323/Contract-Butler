@@ -23,13 +23,20 @@
     "dotenv": "^8.2.0",
     "eosjs": "^21.0.3",
     "graphql-request": "^3.4.0",
+    "husky": "^5.0.9",
     "node-fetch": "^2.6.1",
     "node-schedule": "^2.0.0",
     "nodemon": "^2.0.7",
+    "pretty-quick": "^3.1.0",
     "winston": "^3.3.3",
     "ws": "^7.4.3"
   },
   "devDependencies": {
     "prettier": "^2.2.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }
