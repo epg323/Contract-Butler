@@ -10,37 +10,48 @@ const getCode = async (rpc, contract) => {
   return await rpc.get_code(contract);
 };
 
-const txn = async (api, contract) => {
-  console.log("contract", contract);
-  await api.transact(
-    {
-      actions: [
-        {
-          account: contract,
-          name: "open",
-          authorization: [
-            {
-              actor: "bravocharlie",
-              permission: "active",
-            },
-          ],
-          data: {
-            owner: "bravocharlie",
-            token: {
-              contract: "eosio.token",
-              sym: "4,EOS",
-            },
-            ram_payer: "bravocharlie",
-          },
-        },
-      ],
-    },
-    {
-      blocksBehind: 3,
-      expireSeconds: 30,
-    }
-  );
-  console.log("completed");
-};
+const getTransfers = async (rpc, contract) => {
+  return await rpc.get_table_rows({
+    code: contract,
+    scope: '',
+    table:'buyorders',
+    json:true,
+    limit:250,
+    reverse:true,
+  })
+}
 
-module.exports = { getBlock, getAccount, getCode, txn };
+const getSupply = async (rpc, contract,pool) => {
+  return await rpc.get_table_rows({
+    code: contract,
+    scope: pool,
+    table:'stat',
+    json:true,
+    limit:250,
+    reverse:true
+  })
+}
+
+const getSellOrders = async (rpc, contract) => {
+  return await rpc.get_table_rows({
+    code: contract,
+    scope: '0',
+    table:'sellorders',
+    json:true,
+    limit:250,
+    reverse:true,
+  })
+}
+
+const getMarkets = async (rpc, contract) => {
+  return await rpc.get_table_rows({
+    code: contract,
+    scope: 'mindswaplimt',
+    table:'markets',
+    json:true,
+    limit:250,
+    reverse:true,
+  })
+}
+
+module.exports = { getBlock, getAccount, getCode, getTransfers, getSupply, getSellOrders, getMarkets };

@@ -7,7 +7,7 @@ const clslmtsell = async (api, contract, id, mrktId) => {
           name: "clslmtsell",
           authorization: [
             {
-              actor: bravoCharlie,
+              actor: "bravocharlie",
               permission: "active",
             },
           ],

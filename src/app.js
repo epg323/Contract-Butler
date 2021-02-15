@@ -3,69 +3,31 @@ global.fetch = require("node-fetch");
 global.WebSocket = require("ws");
 const { dfuseClient, createDfuseClient } = require("@dfuse/client");
 const { api, rpc } = require("./eosjs/api");
-const { getBlock, getAccount, getCode } = require("./eosjs/getBlock");
-const { open, close, crtlmtbuy, transfer } = require("./actions");
+const { getBlock, getAccount, getCode, getTransfers, getSupply, getSellOrders, getMarkets } = require("./eosjs/getBlock");
+const { open, close, crtlmtbuy, crtlmtsell, transfer, clslmtbuy, clslmtsell, withdraw } = require("./actions");
 const { DFUSE_API_KEY, DFUSE_NETWORK } = process.env;
+const {tokens, balances} = require("./constants/index");
+const logger = require('./logger/log');
+const schedule = require('node-schedule');
+//const {request} = require('graphql-request');
 
-//getBlock(rpc).then(data => console.log("this is the data:",data))
-getAccount(rpc, "mindswaplimt").then((data) =>
-  console.log("this is the data", data)
-);
-getCode(rpc, "mindswaplimt").then((data) =>
-  console.log(
-    "this is the code",
-    JSON.stringify(data.abi),
-    data.abi.structs[8].fields
-  )
-);
-//open(api, 'mindswaplimt')
-//close(api,'mindswaplimt')
-crtlmtbuy(api, "mindswaplimt");
-transfer(api, "mindswaplimt");
-const client = createDfuseClient({
-  apiKey: DFUSE_API_KEY,
-  network: "eos.dfuse.eosnation.io", // DFUSE_NETWORK
+let oldMarket, newMarket;
+oldMarket = newMarket = 0;
+
+schedule.scheduleJob('30 * * * * *', function(){
+  getMarkets(rpc,'mindswaplimt').then(data => 
+  {
+    newMarket = data.rows.length
+    logger.info(`Lengths are ${newMarket}, and ${oldMarket}`)
+    if(oldMarket !== newMarket){
+      logger.info("New markets are in! Contract-Butler is on it 🦾🧐")
+      logger.info(data.rows)
+      oldMarket = newMarket;
+    }else{
+      logger.info("Nothing new so far 😴")
+      oldMarket = newMarket;
+    }
+  })
 });
-
-const operation = `subscription($cursor: String!) {
-    searchTransactionsForward(query:"receiver:eosio.token action:transfer -data.quantity:'0.0001 EOS'", cursor: $cursor) {
-      undo cursor
-      trace { id matchingActions { json } }
-    }
-  }`;
-
-async function main() {
-  const stream = await client.graphql(operation, (message) => {
-    if (message.type === "data") {
-      const {
-        undo,
-        cursor,
-        trace: { id, matchingActions },
-      } = message.data.searchTransactionsForward;
-      matchingActions.forEach(({ json: { from, to, quantity } }) => {
-        console.log(
-          `Transfer ${from} -> ${to} [${quantity}]${undo ? " REVERTED" : ""}`
-        );
-      });
-
-      // Mark stream at cursor location, on re-connect, we will start back at cursor
-      stream.mark({ cursor });
-    }
-
-    if (message.type === "error") {
-      console.log("An error occurred", message.errors, message.terminal);
-    }
-
-    if (message.type === "complete") {
-      console.log("Completed");
-    }
-  });
-
-  // Waits until the stream completes, or forever
-  await stream.join();
-  await client.release();
-}
-
-//main().catch(error => console.log('Unexpected error', error));
 
 module.exports = dfuseClient;

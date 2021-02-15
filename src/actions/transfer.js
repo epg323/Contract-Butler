@@ -15,7 +15,7 @@ const transfer = async (api, contract, tokenContract, from, qty) => {
             from: from,
             to: contract,
             quantity: qty,
-            memo: `Sent ${qty} from ${from} to ${to}`,
+            memo: `Sent ${qty} from ${from} to ${contract}`,
           },
         },
       ],

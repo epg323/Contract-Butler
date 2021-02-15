@@ -1,11 +1,10 @@
-const withdraw = async (api, contract, from, to, qty) => {
+const withdraw = async (api, contract, from, to, tokenContract , qty) => {
   await api.transact(
     {
       actions: [
         {
           account: contract,
           name: "withdraw",
-          base: "",
           authorization: [
             {
               actor: "bravocharlie",
@@ -15,14 +14,17 @@ const withdraw = async (api, contract, from, to, qty) => {
           data: {
             from: from,
             to: to,
-            quantity: qty,
+            quantity: {
+              contract: tokenContract,
+              quantity: qty,
+            },
             memo: `${from} sent ${to} ${qty}`,
           },
         },
       ],
     },
     {
-      blockBehind: 3,
+      blocksBehind: 3,
       expireSeconds: 30,
     }
   );
