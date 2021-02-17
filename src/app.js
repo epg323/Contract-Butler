@@ -12,15 +12,16 @@ const schedule = require('node-schedule');
 const asset = require('eos-common')
 const getContractMarkets = require('./tasks/getContractMarkets.js');
 const getLimits = require('./tasks/getLimits');
-const getPairSupply = require("./tasks/getPairSupply");
+const getPrice = require("./tasks/getPrice");
+const priceCompare = require("./tasks/priceCompare");
 //const {request} = require('graphql-request');
 
 const scanMarket = async () => {
   // compare min and max price
   markets = await getContractMarkets(rpc,'mindswaplimt');
   limits = await getLimits(rpc,'mindswaplimt',markets)
-  value = await getPairSupply(rpc,'mindswapswap', limits[0].token1, limits[0].token2, 100);
-  console.log("1 IQ for ",value,limits[0].token2.sym)
+  ordersToExecute = await priceCompare(rpc,'mindswapswap',limits);
+  console.log(ordersToExecute)
   return markets
 }
 
