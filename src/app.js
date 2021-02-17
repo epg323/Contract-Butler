@@ -10,7 +10,17 @@ const {tokens, balances} = require("./constants/index");
 const logger = require('./logger/log');
 const schedule = require('node-schedule');
 const asset = require('eos-common')
+const getContractMarkets = require('./tasks/getContractMarkets.js');
+const getLimits = require('./tasks/getLimits')
 //const {request} = require('graphql-request');
+
+const scanMarket = async () => {
+  markets = await getContractMarkets(rpc,'mindswaplimt');
+  limits = await getLimits(rpc,'mindswaplimt',markets)
+  return markets
+}
+
+testy = scanMarket()
 
 schedule.scheduleJob('30 * * * * *', function(){
   let supply1 ,supply2;
@@ -46,9 +56,6 @@ schedule.scheduleJob('30 * * * * *', function(){
           console.log(value.toString(), obj.token1.symbol.toString())
         }): console.log("nothing");
         }
-        
-        getSellOrders(rpc,'mindswaplimt',id )//.then(data => console.log(data.rows))
-        getBuyOrders(rpc, 'mindswaplimt', id)//.then(data => console.log(data.rows))
       });
   })
 });
