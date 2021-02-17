@@ -21,6 +21,7 @@
   "dependencies": {
     "@dfuse/client": "^0.3.17",
     "dotenv": "^8.2.0",
+    "eos-common": "^0.8.0",
     "eosjs": "^21.0.3",
     "graphql-request": "^3.4.0",
     "husky": "^5.0.9",
