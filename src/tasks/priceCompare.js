@@ -12,7 +12,8 @@ const priceCompare = async (rpc,contract,limits) => {
         const reqPrice = parseFloat(order.price.split(" ")[0])
         const orderId = order.id
       
-        if( marketPrice>reqPrice){
+        if( marketPrice>=reqPrice){
+            console.log(`Order #${orderId} can be fulfilled. ${token1.sym.split(",")[1]} is ${marketPrice-reqPrice} above requested price.`)
             executeBuy.push(orderId)
         }
     }))
@@ -21,7 +22,8 @@ const priceCompare = async (rpc,contract,limits) => {
         const reqPrice = parseFloat(order.price.split(" ")[0])
         const orderId = order.id
 
-        if( marketPrice < reqPrice){
+        if( marketPrice <= reqPrice){
+            console.log(`Order #${orderId} can be fulfilled. ${token1.sym.split(",")[1]} is ${reqprice=marketPrice} above below price.`)
             executeSell.push(orderId)
         }
     }))
