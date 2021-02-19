@@ -3,7 +3,7 @@ const { tokens } = require("../constants");
 const { getSupply } = require("../eosjs/getBlock");
 
 const getPrice = async (rpc,contract,token1,token2, order) => {
-    let foundPair, price;
+    let foundPair, marketPrice, poolName, minAmt;
     const sym1 = token1.sym.split(",")[1]
     const sym2 = token2.sym.split(",")[1]
     const qtyBuy = parseInt(order.volume.split(" ")[0],10)
@@ -22,13 +22,14 @@ const getPrice = async (rpc,contract,token1,token2, order) => {
         }).then(async (obj) => {
           let value = await calc(asset(qtyBuy,obj.token2.symbol).amount, obj.token1.amount, obj.token2.amount.add(qtyBuy),0)
           value = value.toString()
-
-          price = qtyBuy/value
+          marketPrice = qtyBuy/value; // TODO: verify this calculation
+          poolName= pool;
+          minAmt = asset(marketPrice* Math.pow(10,obj.token1.symbol.toString().split(',')[0]), obj.token1.symbol);
         })
     }else{
-        value = null;
+        console.log(`pool for pair,(${sym1} ${sym2}),not found`)
     }
-    return price;
+    return {marketPrice,poolName,minAmt};
 }
 
 const calc = async function(x,y,z,fee) {

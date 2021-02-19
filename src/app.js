@@ -14,14 +14,17 @@ const getContractMarkets = require('./tasks/getContractMarkets.js');
 const getLimits = require('./tasks/getLimits');
 const getPrice = require("./tasks/getPrice");
 const priceCompare = require("./tasks/priceCompare");
+const getCurrencyBalance = require("./eosjs/getCurrencyBalance");
+const executeOrders = require("./tasks/executeOrders");
 //const {request} = require('graphql-request');
 
 const scanMarket = async () => {
   // compare min and max price
   markets = await getContractMarkets(rpc,'mindswaplimt');
-  limits = await getLimits(rpc,'mindswaplimt',markets)
-  ordersToExecute = await priceCompare(rpc,'mindswapswap',limits);
-  console.log(ordersToExecute)
+  //limits = await getLimits(rpc,'mindswaplimt',markets)
+  //ordersToExecute = await priceCompare(rpc,'mindswapswap',limits);
+  //getCurrencyBalance(rpc, "everipediaiq","IQ").then(data => console.log(data)).catch(e => console.log(e))
+  executeOrders(rpc) // TODO: add more inputs
   return markets
 }
 
