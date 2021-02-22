@@ -5,7 +5,7 @@ const priceCompare = async (rpc,contract,limits) => {
   const executeSell = [];
   const executeBuy = [];
   await Promise.all(limits.map(async (pair) => {
-    const {token1 ,token2} = pair;
+    const {id, token1 ,token2} = pair;
     
     await Promise.all(pair.sellOrders.map( async (order) => { // TODO: update Buy Orders promise , copy Sell Orders promise
         const {marketPrice, pool}= await getPrice(rpc,contract,token1,token2,order)
@@ -24,6 +24,7 @@ const priceCompare = async (rpc,contract,limits) => {
         if( marketPrice <= reqPrice){
             console.log(`Order #${orderId} can be fulfilled. ${token1.sym.split(",")[1]} is ${reqprice=marketPrice} below requested price.`)
             executeBuy.push({
+              marketId: id,
               orderId: orderId,
               orderBalance: order.balance,
               token1Sym: token1.sym.split(",")[1],

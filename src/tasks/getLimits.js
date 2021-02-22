@@ -4,6 +4,8 @@ const getLimits = async (rpc,contract,markets)=> {
     let limitData=[];
     await Promise.all(markets.map( async (market) =>{
         const {id,token1,token2} = market
+        console.log("market market",market, id)
+
         const sellOrders = await getSellOrders(rpc,contract,id)
         const buyOrders = await getBuyOrders(rpc,contract,id)
         let minSell=[];

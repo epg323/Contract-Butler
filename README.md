@@ -1,6 +1,6 @@
 # Contract-Butler 🦾🧐
 
-## Instalation
+## Installation
 ```
 npm install
 

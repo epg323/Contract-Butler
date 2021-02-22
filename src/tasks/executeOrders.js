@@ -1,3 +1,5 @@
+const fillbuyord = require("../actions/fillbuyord");
+const { api } = require("../eosjs/api");
 const getCurrencyBalance = require("../eosjs/getCurrencyBalance");
 const getLimits = require("./getLimits");
 const priceCompare = require("./priceCompare");
@@ -14,10 +16,18 @@ const executeOrders = async (rpc,contract,limitList)=>{
         const balanceRequestedAmt = parseInt(balanceRequested.split(" ")[0],10);
         if(walletBalanceAmt>balanceRequestedAmt){
             console.log("we have enough money in our wallet")
+            const {marketId, orderId} = ordersToExecute.BuysToExecute[0];
+            console.log("here are some ids", ordersToExecute.BuysToExecute[0],marketId, orderId)
+            fillbuyord(api,"mindswaplimt", marketId, orderId).then(data => console.log("completed")).catch(e => console.log(e));
             // TODO: exhange tokens from mindswaswap action
             // TODO: after making exchange fulfill contract
+
+            //executeorders()
         }else{
             console.log("need more funds in our wallet")
+            // TODO: Get necessary funds to fulfill that order
+            // TODO: verify that the exchange is worth it, might be too expensive to fufill that order
+            //executeorders()
         }
     } else if(ordersToExecute.SalesToExecute.length > 0){
         //sell
