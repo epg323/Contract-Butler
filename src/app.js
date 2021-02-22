@@ -4,7 +4,6 @@ global.WebSocket = require("ws");
 const { dfuseClient, createDfuseClient } = require("@dfuse/client");
 const { api, rpc } = require("./eosjs/api");
 const { getBlock, getAccount, getCode, getTransfers, getSupply, getSellOrders, getMarkets, getBuyOrders } = require("./eosjs/getBlock");
-const { open, close, crtlmtbuy, crtlmtsell, transfer, clslmtbuy, clslmtsell, withdraw } = require("./actions");
 const { DFUSE_API_KEY, DFUSE_NETWORK } = process.env;
 const {tokens, balances} = require("./constants/index");
 const logger = require('./logger/log');
@@ -17,6 +16,10 @@ const priceCompare = require("./tasks/priceCompare");
 const getCurrencyBalance = require("./eosjs/getCurrencyBalance");
 const executeOrders = require("./tasks/executeOrders");
 //const {request} = require('graphql-request');
+const open = require("./actions/arbitrage/open");
+const transfer = require("./actions/limit/transfer");
+const arbordtrade = require("./actions/arbitrage/arbordtrade")
+const validate = require("./actions/arbitrage/validate")
 
 const scanMarket = async () => {
   // compare min and max price

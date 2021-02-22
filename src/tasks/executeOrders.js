@@ -1,8 +1,9 @@
-const fillbuyord = require("../actions/fillbuyord");
+const fillbuyord = require("../actions/limit/fillbuyord");
 const { api } = require("../eosjs/api");
 const getCurrencyBalance = require("../eosjs/getCurrencyBalance");
 const getLimits = require("./getLimits");
 const priceCompare = require("./priceCompare");
+const crtlmtsell = require("../actions/limit/crtlmtsell")
 
 const executeOrders = async (rpc,contract,limitList)=>{
     limits = await getLimits(rpc,'mindswaplimt',markets)
@@ -18,7 +19,8 @@ const executeOrders = async (rpc,contract,limitList)=>{
             console.log("we have enough money in our wallet")
             const {marketId, orderId} = ordersToExecute.BuysToExecute[0];
             console.log("here are some ids", ordersToExecute.BuysToExecute[0],marketId, orderId)
-            fillbuyord(api,"mindswaplimt", marketId, orderId).then(data => console.log("completed")).catch(e => console.log(e));
+            crtlmtsell(api, "mindswaplimt", "bravocharlie", ordersToExecute.BuysToExecute[0].token1Contract, ordersToExecute.BuysToExecute[0].token2Contract, ordersToExecute.BuysToExecute[0].orderBalance, "1.000 YEMSWAP")
+            //fillbuyord(api,"mindswaplimt", marketId, orderId).then(data => console.log("completed")).catch(e => console.log(e));
             // TODO: exhange tokens from mindswaswap action
             // TODO: after making exchange fulfill contract
 
