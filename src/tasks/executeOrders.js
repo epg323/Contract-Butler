@@ -1,32 +1,20 @@
-const fillbuyord = require("../actions/limit/fillbuyord");
 const { api } = require("../eosjs/api");
-const getCurrencyBalance = require("../eosjs/getCurrencyBalance");
 const getLimits = require("./getLimits");
 const priceCompare = require("./priceCompare");
 const crtlmtsell = require("../actions/limit/crtlmtsell")
 const crtlmtbuy = require("../actions/limit/crtlmtbuy")
-const open = require("../actions/limit/open")
-const transfer = require("../actions/limit/transfer")
+const balanceCheck = require("./balanceCheck");
+const fulfillOrders = require("./fulfillOrders");
 
-const executeOrders = async (rpc,markets,contract,limitList)=>{
+const executeOrders = async (rpc,markets)=>{
     const limits = await getLimits(rpc,'mindswaplimt',markets)
     const ordersToExecute = await priceCompare(rpc,'mindswapswap',limits);
-    //console.log(ordersToExecute)
     if( ordersToExecute.BuysToExecute.length > 0 ){
-        //buy
-        const walletBalance = await getCurrencyBalance(rpc, ordersToExecute.BuysToExecute[0].token1Contract ,ordersToExecute.BuysToExecute[0].token1tickr)
-        const balanceRequested = ordersToExecute.BuysToExecute[0].orderBalance;
-        const walletBalanceAmt = parseInt(walletBalance[0].split(" ")[0],10);
-        const balanceRequestedAmt = parseInt(balanceRequested.split(" ")[0],10);
+        const {token1Contract, token1tickr, token1Sym,token2Contract, orderBalance,orderPrice} = ordersToExecute.BuysToExecute[0]
+        const {walletBalanceAmt,balanceRequestedAmt}=balanceCheck(rpc, token1Contract, token1tickr, orderBalance);
         if(walletBalanceAmt>balanceRequestedAmt){
             console.log("we have enough money in our wallet")
-            open(api, 'mindswaplimt', 'bravocharlie',ordersToExecute.BuysToExecute[0].token1Contract,ordersToExecute.BuysToExecute[0].token1Sym,"bravocharlie")
-            transfer(api, "mindswaplimt", ordersToExecute.BuysToExecute[0].token1Contract, "bravocharlie", ordersToExecute.BuysToExecute[0].orderBalance).catch(e => console.log(e));
-            crtlmtsell(api, "mindswaplimt", "bravocharlie", ordersToExecute.BuysToExecute[0].token2Contract,ordersToExecute.BuysToExecute[0].token1Contract,  ordersToExecute.BuysToExecute[0].orderPrice,ordersToExecute.BuysToExecute[0].orderBalance).then(data => {
-                console.log("limit order is being fufilled")
-            }).then(data => {
-                executeOrders(rpc,markets)
-            });
+            fulfillOrders(api,token1Contract,token1Sym,token2Contract,orderBalance,orderPrice,crtlmtsell)
         }else{
             console.log("need more funds in our wallet")
             // TODO: Get necessary funds to fulfill that order
@@ -34,24 +22,12 @@ const executeOrders = async (rpc,markets,contract,limitList)=>{
             //executeorders()
         }
     } else if(ordersToExecute.SalesToExecute.length > 0){
-        console.log("ready to sell")
-        //sell
         if( ordersToExecute.SalesToExecute.length > 0 ){
-            //buy
-            const walletBalance = await getCurrencyBalance(rpc, ordersToExecute.SalesToExecute[0].token1Contract ,ordersToExecute.SalesToExecute[0].token1tickr)
-            const balanceRequested = ordersToExecute.SalesToExecute[0].orderBalance;
-            const walletBalanceAmt = parseInt(walletBalance[0].split(" ")[0],10);
-            const balanceRequestedAmt = parseInt(balanceRequested.split(" ")[0],10);
+            const {token1Contract, token1tickr, token1Sym,token2Contract, orderBalance,orderPrice} = ordersToExecute.SalesToExecute[0]
+            const {walletBalanceAmt,balanceRequestedAmt}=balanceCheck(rpc, token1Contract, token1tickr, orderBalance);
             if(walletBalanceAmt>balanceRequestedAmt){
                 console.log("we have enough money in our wallet")
-                open(api, 'mindswaplimt', 'bravocharlie',ordersToExecute.SalesToExecute[0].token1Contract,ordersToExecute.SalesToExecute[0].token1Sym,"bravocharlie")
-                transfer(api, "mindswaplimt", ordersToExecute.SalesToExecute[0].token1Contract, "bravocharlie", ordersToExecute.SalesToExecute[0].orderBalance).catch(e => console.log(e));
-                crtlmtbuy(api, "mindswaplimt", "bravocharlie", ordersToExecute.SalesToExecute[0].token2Contract,ordersToExecute.SalesToExecute[0].token1Contract,  ordersToExecute.SalesToExecute[0].orderPrice,ordersToExecute.SalesToExecute[0].orderBalance).then(data => {
-                    console.log("limit order has been fufilled")
-                }).then(data => {
-                    executeOrders(rpc,markets)
-                });
-
+                fulfillOrders(api,token1Contract,token1Sym,token2Contract,orderBalance,orderPrice,crtlmtbuy)
             }else{
                 console.log("need more funds in our wallet")
                 // TODO: Get necessary funds to fulfill that order

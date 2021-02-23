@@ -9,13 +9,12 @@ const getLimits = async (rpc,contract,markets)=> {
         let minSell=[];
         let minBuy=[];
         buyOrders.rows.forEach(price => minBuy.push(parseFloat(price.price.split(" ")[0])))
-        sellOrders.rows.forEach(price => {minSell.push(parseFloat(price.price.split(" ")[0]))})
+        sellOrders.rows.forEach(price => minSell.push(parseFloat(price.price.split(" ")[0])))
         const buyUpperBound = minBuy.length > 0? Math.max(...minBuy) : null;
         const sellLowerBound = minSell.length > 0? Math.min(...minSell) : null;
 
         limitData.push({"id":id, "token1":token1, "token2":token2, "sellOrders": sellOrders.rows, "buyOrders": buyOrders.rows, "mostExpensiveBuy":buyUpperBound, "cheapestSale": sellLowerBound});
-        }
-        ));
+        }));
     return limitData;
 }
 
