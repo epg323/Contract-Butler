@@ -18,21 +18,26 @@ const executeOrders = require("./tasks/executeOrders");
 //const {request} = require('graphql-request');
 const open = require("./actions/arbitrage/open");
 const transfer = require("./actions/limit/transfer");
+const crtlmtsell = require("./actions/limit/crtlmtsell");
 const arbordtrade = require("./actions/arbitrage/arbordtrade")
 const validate = require("./actions/arbitrage/validate")
 
+open(api, 'mindswaplimt', 'bravocharlie',"everipediaiq","3,IQ","bravocharlie")
+transfer(api, "mindswaplimt", "everipediaiq", "bravocharlie", "1.000 IQ").catch(e => console.log(e));
+crtlmtsell(api, "mindswaplimt", "bravocharlie",  "prediqtokens","everipediaiq","0.500 YEMSWAP", "1.000 IQ");
+
 const scanMarket = async () => {
   // compare min and max price
-  markets = await getContractMarkets(rpc,'mindswaplimt');
+  const markets = await getContractMarkets(rpc,'mindswaplimt');
   //limits = await getLimits(rpc,'mindswaplimt',markets)
   //ordersToExecute = await priceCompare(rpc,'mindswapswap',limits);
   //getCurrencyBalance(rpc, "everipediaiq","IQ").then(data => console.log(data)).catch(e => console.log(e))
-  executeOrders(rpc) // TODO: add more inputs
+  executeOrders(rpc, markets) // TODO: add more inputs
   return markets
 }
 
-test = scanMarket()
 
 schedule.scheduleJob('30 * * * * *', function(){
   console.log("Robo-scan 🤖📠")
+  scanMarket()
 });

@@ -6,7 +6,8 @@ const getPrice = async (rpc,contract,token1,token2, order) => {
     let foundPair, marketPrice, poolName, minAmt;
     const sym1 = token1.sym.split(",")[1]
     const sym2 = token2.sym.split(",")[1]
-    const qtyBuy = parseInt(order.volume.split(" ")[0],10)
+    const qtyBuy = parseFloat(order.volume.split(" ")[0]) * 10000
+
     if(sym1 !== 'IQ'){
         foundPair = tokens.find( element => element.name === sym1);
     }else{

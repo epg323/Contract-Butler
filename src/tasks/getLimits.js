@@ -8,8 +8,8 @@ const getLimits = async (rpc,contract,markets)=> {
         const buyOrders = await getBuyOrders(rpc,contract,id)
         let minSell=[];
         let minBuy=[];
-        buyOrders.rows.forEach(price => minBuy.push(parseFloat(price.price.split(" ")[0], 10)))
-        sellOrders.rows.forEach(price => minSell.push(parseFloat(price.price.split(" ")[0], 10)))
+        buyOrders.rows.forEach(price => minBuy.push(parseFloat(price.price.split(" ")[0])))
+        sellOrders.rows.forEach(price => {minSell.push(parseFloat(price.price.split(" ")[0]))})
         const buyUpperBound = minBuy.length > 0? Math.max(...minBuy) : null;
         const sellLowerBound = minSell.length > 0? Math.min(...minSell) : null;
 
