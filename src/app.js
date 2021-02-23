@@ -13,6 +13,6 @@ const scanMarket = async () => {
 }
 
 schedule.scheduleJob('30 * * * * *', function(){
-  console.log("Robo-MarketScan 🤖📠")
+  logger.info("Robo-MarketScan 🤖📠")
   scanMarket()
 });
