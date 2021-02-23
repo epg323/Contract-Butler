@@ -7,7 +7,7 @@ const open = async (api, contract, txnOwner, tokenContract, tokenSym, ramPayer) 
             name: "open",
             authorization: [
               {
-                actor: "bravocharlie",
+                actor: process.env.BOT_WALLET_KYLIN,
                 permission: "active",
               },
             ],

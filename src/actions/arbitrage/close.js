@@ -7,7 +7,7 @@ const close = async (api, contract, txnOwner, tokenContract, tokenSym) => {
             name: "close",
             authorization: [
               {
-                actor: "bravocharlie",
+                actor: process.env.BOT_WALLET_KYLIN,
                 permission: "active",
               },
             ],

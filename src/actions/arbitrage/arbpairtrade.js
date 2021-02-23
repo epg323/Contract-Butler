@@ -3,7 +3,7 @@ const arbpairtrade = async (api,contract,accnt,marketId,ordersType,ordersIds,poo
         account: contract,
         name: "arbpairtrade",
         authorization:[{
-            actor:"bravocharlie",
+            actor:process.env.BOT_WALLET_KYLIN,
             permission: "active"
         }],
         data:{

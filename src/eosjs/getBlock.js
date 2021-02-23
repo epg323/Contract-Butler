@@ -57,7 +57,7 @@ const getBuyOrders = async (rpc, contract, marketId) => {
 const getMarkets = async (rpc, contract) => {
   return await rpc.get_table_rows({
     code: contract,
-    scope: 'mindswaplimt',
+    scope: process.env.LIMIT_CONTRACT,
     table:'markets',
     json:true,
     limit:250,

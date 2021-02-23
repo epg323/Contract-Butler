@@ -3,7 +3,7 @@ const arbordtrade = async (api,contract,accnt,marketId,orderType,orderId,amt,poo
         account: contract,
         name: "arbordtrade",
         authorization:[{
-            actor:"bravocharlie",
+            actor: process.env.BOT_WALLET_KYLIN,
             permission: "active"
         }],
         data:{

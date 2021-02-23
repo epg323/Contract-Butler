@@ -3,7 +3,7 @@ const arbordtrade = async (api,contract,accnt,type,amt,tokenContract,recipient) 
         account: contract,
         name: "validate",
         authorization:[{
-            actor:"bravocharlie",
+            actor:process.env.BOT_WALLET_KYLIN,
             permission: "active"
         }],
         data:{

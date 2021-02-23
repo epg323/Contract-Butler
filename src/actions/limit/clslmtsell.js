@@ -7,7 +7,7 @@ const clslmtsell = async (api, contract, id, mrktId) => {
           name: "clslmtsell",
           authorization: [
             {
-              actor: "bravocharlie",
+              actor: process.env.BOT_WALLET_KYLIN,
               permission: "active",
             },
           ],

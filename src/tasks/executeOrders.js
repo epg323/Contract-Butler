@@ -8,8 +8,9 @@ const fulfillOrders = require("./fulfillOrders");
 const logger = require("../logger/log");
 
 const executeOrders = async (rpc,markets)=>{
-    const limits = await getLimits(rpc,'mindswaplimt',markets)
-    const ordersToExecute = await priceCompare(rpc,'mindswapswap',limits);
+    const swapContract = process.env.EXCHANGE_CONTRACT
+    const limits = await getLimits(rpc, process.env.LIMIT_CONTRACT ,markets)
+    const ordersToExecute = await priceCompare(rpc,swapContract,limits);
     if( ordersToExecute.BuysToExecute.length > 0 ){
         const {token1Contract, token1tickr, token1Sym,token2Contract, orderBalance,orderPrice} = ordersToExecute.BuysToExecute[0]
         const {walletBalanceAmt,balanceRequestedAmt}=balanceCheck(rpc, token1Contract, token1tickr, orderBalance);

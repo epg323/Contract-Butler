@@ -8,7 +8,7 @@ const getContractMarkets = require('./tasks/getContractMarkets.js');
 const executeOrders = require("./tasks/executeOrders");
 
 const scanMarket = async () => {
-  const markets = await getContractMarkets(rpc,'mindswaplimt');
+  const markets = await getContractMarkets(rpc,process.env.LIMIT_CONTRACT);
   executeOrders(rpc, markets)
 }
 

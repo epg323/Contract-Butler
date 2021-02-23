@@ -3,7 +3,7 @@ const fillsellord = async (api,contract,marketId,orderId) => {
         account: contract,
         name: "fillsellord",
         authorization:[{
-            actor:"bravocharlie",
+            actor:process.env.BOT_WALLET_KYLIN,
             permission: "active"
         }],
         data:{

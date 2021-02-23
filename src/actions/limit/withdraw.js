@@ -7,7 +7,7 @@ const withdraw = async (api, contract, from, to, tokenContract , qty) => {
           name: "withdraw",
           authorization: [
             {
-              actor: "bravocharlie",
+              actor: process.env.BOT_WALLET_KYLIN,
               permission: "active",
             },
           ],

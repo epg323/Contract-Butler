@@ -7,7 +7,7 @@ const transfer = async (api, contract, tokenContract, from, qty) => {
           name: "transfer",
           authorization: [
             {
-              actor: "bravocharlie",
+              actor: process.env.BOT_WALLET_KYLIN,
               permission: "active",
             },
           ],

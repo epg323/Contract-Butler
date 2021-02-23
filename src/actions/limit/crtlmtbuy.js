@@ -7,7 +7,7 @@ const crtlmtbuy = async (api, contract, txnOwner, tokenContract1, tokenContract2
           name: "crtlmtbuy",
           authorization: [
             {
-              actor: "bravocharlie",
+              actor: process.env.BOT_WALLET_KYLIN,
               permission: "active",
             },
           ],
