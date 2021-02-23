@@ -1,4 +1,12 @@
-const crtlmtsell = async (api, contract, txnOwner, tokenContract1, tokenContract2, tokenSym1, tokenSym2) => {
+const crtlmtsell = async (
+  api,
+  contract,
+  txnOwner,
+  tokenContract1,
+  tokenContract2,
+  tokenSym1,
+  tokenSym2
+) => {
   await api.transact(
     {
       actions: [

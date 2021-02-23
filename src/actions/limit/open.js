@@ -1,4 +1,11 @@
-const open = async (api, contract, txnOwner, tokenContract, tokenSym, ramPayer) => {
+const open = async (
+  api,
+  contract,
+  txnOwner,
+  tokenContract,
+  tokenSym,
+  ramPayer
+) => {
   await api.transact(
     {
       actions: [

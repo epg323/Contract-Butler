@@ -1,34 +1,33 @@
-const withdraw = async (api, contract, from, to, tokenContract , qty) => {
-    await api.transact(
-      {
-        actions: [
-          {
-            account: contract,
-            name: "withdraw",
-            authorization: [
-              {
-                actor: process.env.BOT_WALLET_KYLIN,
-                permission: "active",
-              },
-            ],
-            data: {
-              from: from,
-              to: to,
-              quantity: {
-                contract: tokenContract,
-                quantity: qty,
-              },
-              memo: `${from} sent ${to} ${qty}`,
+const withdraw = async (api, contract, from, to, tokenContract, qty) => {
+  await api.transact(
+    {
+      actions: [
+        {
+          account: contract,
+          name: "withdraw",
+          authorization: [
+            {
+              actor: process.env.BOT_WALLET_KYLIN,
+              permission: "active",
             },
+          ],
+          data: {
+            from: from,
+            to: to,
+            quantity: {
+              contract: tokenContract,
+              quantity: qty,
+            },
+            memo: `${from} sent ${to} ${qty}`,
           },
-        ],
-      },
-      {
-        blocksBehind: 3,
-        expireSeconds: 30,
-      }
-    );
-  };
-  
-  module.exports = withdraw;
-  
+        },
+      ],
+    },
+    {
+      blocksBehind: 3,
+      expireSeconds: 30,
+    }
+  );
+};
+
+module.exports = withdraw;

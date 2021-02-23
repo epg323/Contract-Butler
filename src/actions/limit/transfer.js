@@ -3,7 +3,7 @@ const transfer = async (api, contract, tokenContract, from, qty) => {
     {
       actions: [
         {
-          account: tokenContract, 
+          account: tokenContract,
           name: "transfer",
           authorization: [
             {

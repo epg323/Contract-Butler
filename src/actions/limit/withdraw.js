@@ -1,4 +1,4 @@
-const withdraw = async (api, contract, from, to, tokenContract , qty) => {
+const withdraw = async (api, contract, from, to, tokenContract, qty) => {
   await api.transact(
     {
       actions: [
