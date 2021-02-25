@@ -1,5 +1,5 @@
 const transfer = async (api, contract, tokenContract, from, qty) => {
-  await api.transact(
+  const result = await api.transact(
     {
       actions: [
         {
@@ -25,6 +25,7 @@ const transfer = async (api, contract, tokenContract, from, qty) => {
       expireSeconds: 30,
     }
   );
+  return result;
 };
 
 module.exports = transfer;

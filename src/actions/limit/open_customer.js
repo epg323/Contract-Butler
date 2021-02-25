@@ -1,18 +1,17 @@
-const crtlmtsell = async (
+const open = async (
   api,
   contract,
   txnOwner,
-  tokenContract1,
-  tokenContract2,
-  tokenSym1,
-  tokenSym2
+  tokenContract,
+  tokenSym,
+  ramPayer
 ) => {
-  const result = await api.transact(
+  await api.transact(
     {
       actions: [
         {
           account: contract,
-          name: "crtlmtsell",
+          name: "open",
           authorization: [
             {
               actor: process.env.BOT_WALLET_KYLIN,
@@ -21,14 +20,11 @@ const crtlmtsell = async (
           ],
           data: {
             owner: txnOwner,
-            price: {
-              contract: tokenContract1,
-              quantity: tokenSym1,
+            token: {
+              contract: tokenContract,
+              sym: tokenSym,
             },
-            volume: {
-              contract: tokenContract2,
-              quantity: tokenSym2,
-            },
+            ram_payer: ramPayer,
           },
         },
       ],
@@ -38,7 +34,6 @@ const crtlmtsell = async (
       expireSeconds: 30,
     }
   );
-  return result;
 };
 
-module.exports = crtlmtsell;
+module.exports = open;

@@ -7,7 +7,7 @@ const crtlmtbuy = async (
   tokenSym1,
   tokenSym2
 ) => {
-  await api.transact(
+  const result = await api.transact(
     {
       actions: [
         {
@@ -38,6 +38,7 @@ const crtlmtbuy = async (
       expireSeconds: 30,
     }
   );
+  return result;
 };
 
 module.exports = crtlmtbuy;

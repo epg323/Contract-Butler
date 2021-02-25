@@ -6,7 +6,7 @@ const open = async (
   tokenSym,
   ramPayer
 ) => {
-  await api.transact(
+  const result = await api.transact(
     {
       actions: [
         {
@@ -34,6 +34,7 @@ const open = async (
       expireSeconds: 30,
     }
   );
+  return result;
 };
 
 module.exports = open;

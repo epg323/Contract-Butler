@@ -20,7 +20,7 @@ const executeOrders = async (rpc, markets) => {
       orderBalance,
       orderPrice,
     } = ordersToExecute.BuysToExecute[0];
-    const { walletBalanceAmt, balanceRequestedAmt } = balanceCheck(
+    const { walletBalanceAmt, balanceRequestedAmt } = await balanceCheck(
       rpc,
       token1Contract,
       token1tickr,
@@ -36,7 +36,9 @@ const executeOrders = async (rpc, markets) => {
         token2Contract,
         orderBalance,
         orderPrice,
-        crtlmtsell
+        crtlmtsell,
+        markets,
+        executeOrders
       );
     } else {
       logger.info(
@@ -73,7 +75,9 @@ const executeOrders = async (rpc, markets) => {
         token2Contract,
         orderBalance,
         orderPrice,
-        crtlmtbuy
+        crtlmtbuy,
+        markets,
+        executeOrders
       );
     } else {
       logger.info(
@@ -87,6 +91,7 @@ const executeOrders = async (rpc, markets) => {
     }
   } else {
     console.log("No orders to execute, Contract Butler will go to sleep 😴");
+    return "Done"
   }
 };
 
