@@ -1,7 +1,6 @@
 const open = require("../actions/limit/open");
 const transfer = require("../actions/limit/transfer");
 const logger = require("../logger/log");
-const executeOrders = require("./executeOrders");
 
 const fulfillOrders = async (
   rpc,
@@ -17,6 +16,7 @@ const fulfillOrders = async (
 ) => {
   const butlerWallet = process.env.BOT_WALLET_KYLIN;
   const limtContract = process.env.LIMIT_CONTRACT;
+
   open(
     api,
     limtContract,
@@ -31,7 +31,7 @@ const fulfillOrders = async (
     token1Contract,
     butlerWallet,
     orderBalance
-  ).catch((e) => console.log(e));
+  ).catch((e) => logger.error(e));
   crtlmt(
     api,
     limtContract,
@@ -46,7 +46,7 @@ const fulfillOrders = async (
     })
     .then((data) => {
       executeOrders(rpc, markets);
-    });
+    }).catch((e)=> logger.error("crt lmit fail: " + e));
 };
 
 module.exports = fulfillOrders;

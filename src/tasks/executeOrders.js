@@ -3,9 +3,10 @@ const getLimits = require("./getLimits");
 const priceCompare = require("./priceCompare");
 const crtlmtsell = require("../actions/limit/crtlmtsell");
 const crtlmtbuy = require("../actions/limit/crtlmtbuy");
-const balanceCheck = require("./balanceCheck");
+const balanceCheckForBuyOrder = require("./balanceCheckForBuyOrder");
 const fulfillOrders = require("./fulfillOrders");
 const logger = require("../logger/log");
+const balanceCheckForSellOrder = require("./balanceCheckForSellOrder");
 
 const executeOrders = async (rpc, markets) => {
   const swapContract = process.env.EXCHANGE_CONTRACT;
@@ -13,21 +14,24 @@ const executeOrders = async (rpc, markets) => {
   const ordersToExecute = await priceCompare(rpc, swapContract, limits);
   if (ordersToExecute.BuysToExecute.length > 0) {
     const {
+      marketId,
+      orderId,
       token1Contract,
       token1tickr,
       token1Sym,
       token2Contract,
+      token2tickr,
       orderBalance,
       orderPrice,
     } = ordersToExecute.BuysToExecute[0];
-    const { walletBalanceAmt, balanceRequestedAmt } = await balanceCheck(
+    const { walletBalanceAmt, balanceRequestedAmt } = await balanceCheckForBuyOrder(
       rpc,
       token1Contract,
       token1tickr,
       orderBalance
     );
     if (walletBalanceAmt > balanceRequestedAmt) {
-      logger.info("we have enough money in our wallet");
+      logger.info("Placing an order for " + orderBalance + " priced at " + orderPrice)
       fulfillOrders(
         rpc,
         api,
@@ -42,31 +46,35 @@ const executeOrders = async (rpc, markets) => {
       );
     } else {
       logger.info(
-        `need more funds in our wallet, we need ${
+        `This order is trying to trade ${token1tickr} for ${token2tickr}.Need more funds in our wallet to fill the order, we need ${
           balanceRequestedAmt - walletBalanceAmt
-        }`
+        }${token1tickr} to fulfill order number ${orderId} in market number ${marketId}`
       );
-      // TODO: Get necessary funds to fulfill that order
-      // TODO: verify that the exchange is worth it, might be too expensive to fufill that order
-      //executeorders()
+      return "Need more funds"
     }
   } else if (ordersToExecute.SalesToExecute.length > 0) {
     const {
-      token1Contract,
-      token1tickr,
+      marketId,
+      orderId,
       token1Sym,
+      token1tickr,
+      token1Contract,
+      token2Sym,
+      token2tickr,
       token2Contract,
       orderBalance,
       orderPrice,
     } = ordersToExecute.SalesToExecute[0];
-    const { walletBalanceAmt, balanceRequestedAmt } = await balanceCheck(
+
+    const { walletBalanceAmt, balanceRequestedAmt } = await balanceCheckForSellOrder(
       rpc,
-      token1Contract,
-      token1tickr,
-      orderBalance
+      token2Contract,
+      token2tickr,
+      orderBalance,
+      orderPrice
     );
     if (walletBalanceAmt > balanceRequestedAmt) {
-      logger.info("we have enough money in our wallet");
+      logger.info("Placing an order for " + orderBalance + " priced at " + orderPrice)
       fulfillOrders(
         rpc,
         api,
@@ -81,16 +89,14 @@ const executeOrders = async (rpc, markets) => {
       );
     } else {
       logger.info(
-        `need more funds in our wallet, we need ${
+        `This order is trying to trade ${token2tickr} for  ${token1tickr}. Need more funds in our wallet to fill the order, we need ${
           balanceRequestedAmt - walletBalanceAmt
-        }`
+        } ${token2tickr} to fulfill order number ${orderId} in market number ${marketId}`
       );
-      // TODO: Get necessary funds to fulfill that order
-      // TODO: verify that the exchange is worth it, might be too expensive to fufill that order
-      //executeorders()
+      return "Need more funds"
     }
   } else {
-    console.log("No orders to execute, Contract Butler will go to sleep 😴");
+    logger.info("No orders to execute, Contract Butler will go to sleep 😴");
     return "Done"
   }
 };

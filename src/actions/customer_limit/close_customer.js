@@ -1,20 +1,13 @@
-const open = async (
-  api,
-  contract,
-  txnOwner,
-  tokenContract,
-  tokenSym,
-  ramPayer
-) => {
-  await api.transact(
+const close_rename = async (api, contract, txnOwner, tokenContract, tokenSym) => {
+  const result = await api.transact(
     {
       actions: [
         {
           account: contract,
-          name: "open",
+          name: "close",
           authorization: [
             {
-              actor: process.env.BOT_WALLET_KYLIN,
+              actor: process.env.TEST_CUSTOMER,
               permission: "active",
             },
           ],
@@ -24,7 +17,6 @@ const open = async (
               contract: tokenContract,
               sym: tokenSym,
             },
-            ram_payer: ramPayer,
           },
         },
       ],
@@ -34,6 +26,7 @@ const open = async (
       expireSeconds: 30,
     }
   );
+  return result;
 };
 
-module.exports = open;
+module.exports = close_rename;

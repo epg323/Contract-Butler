@@ -1,6 +1,7 @@
-const { asset } = require("eos-common");
+const { asset, number_to_asset: numberToAsset } = require("eos-common");
 const { tokens } = require("../constants");
 const { getSupply } = require("../eosjs/getBlock");
+const logger = require("../logger/log");
 
 const getPrice = async (rpc, contract, token1, token2, order) => {
   let foundPair, marketPrice, poolName, minAmt;
@@ -18,33 +19,35 @@ const getPrice = async (rpc, contract, token1, token2, order) => {
     const pool = foundPair.allowedTrades[0].pool;
     await getSupply(rpc, contract, pool)
       .then((data) => {
-        supply1 = asset(data.rows[0].pool1.quantity);
-        supply2 = asset(data.rows[0].pool2.quantity);
-        return { token1: supply1, token2: supply2 };
+        const supply1 = asset(data.rows[0].pool1.quantity);
+        const supply2 = asset(data.rows[0].pool2.quantity);
+        const fee = data.rows[0].fee;
+        return { token1: supply1, token2: supply2, fee: fee };
       })
       .then(async (obj) => {
-        let value = await calc(
-          asset(qtyBuy, obj.token2.symbol).amount,
-          obj.token1.amount,
-          obj.token2.amount.add(qtyBuy),
-          0
+        const value = computeForward(
+          asset(qtyBuy * -1, obj.token1.symbol).amount,
+          obj.token2.amount,
+          obj.token1.amount.add(qtyBuy),
+          obj.fee
         );
-        value = value.toString();
-        marketPrice = qtyBuy / value; // TODO: verify this calculation
+        marketPrice = Math.abs(value)/qtyBuy
+        marketPrice = marketPrice.toPrecision(parseInt(obj.token1.symbol.toString().split(",")[0],10)+1);
+        logger.info("Attempting to buy "+qtyBuy+" the market price for "+ obj.token1.symbol.toString().split(",")[1]+ " -> "+ obj.token1.symbol.toString().split(",")[1] +" is "+marketPrice +obj.token1.symbol.toString().split(",")[1])
         poolName = pool;
         minAmt = asset(
           marketPrice *
-            Math.pow(10, obj.token1.symbol.toString().split(",")[0]),
-          obj.token1.symbol
+            Math.pow(10, obj.token2.symbol.toString().split(",")[0]),
+          obj.token2.symbol
         );
       });
   } else {
-    console.log(`pool for pair,(${sym1} ${sym2}),not found`);
+    logger.error(`pool for pair,(${sym1} ${sym2}),not found`);
   }
   return { marketPrice, poolName, minAmt };
 };
 
-const calc = async function (x, y, z, fee) {
+const computeForward = (x, y, z, fee) => {
   const prod = x.multiply(y);
   let tmp;
   let tmpFee;
@@ -57,8 +60,6 @@ const calc = async function (x, y, z, fee) {
   }
 
   return tmp.plus(tmpFee);
-  //.multiply(100 - slippage)
-  //.divide(100);
 };
 
 module.exports = getPrice;

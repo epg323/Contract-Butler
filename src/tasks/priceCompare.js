@@ -1,4 +1,5 @@
 const { tokens } = require("../constants");
+const logger = require("../logger/log");
 const getPrice = require("./getPrice");
 
 const priceCompare = async (rpc, contract, limits) => {
@@ -9,7 +10,6 @@ const priceCompare = async (rpc, contract, limits) => {
       const { id, token1, token2 } = pair;
       await Promise.all(
         pair.sellOrders.map(async (order) => {
-          // TODO: update Buy Orders promise , copy Sell Orders promise
           const { marketPrice, poolName, minAmt } = await getPrice(
             rpc,
             contract,
@@ -19,10 +19,10 @@ const priceCompare = async (rpc, contract, limits) => {
           );
           const reqPrice = parseFloat(order.price.split(" ")[0]);
           const orderId = order.id;
-          if (marketPrice >= reqPrice) {
-            console.log(
-              `Order #${orderId} can be fulfilled. ${
-                token1.sym.split(",")[1]
+          if (marketPrice && reqPrice && (marketPrice >= reqPrice) ) {
+            logger.info(
+              `Sell Order #${orderId} can be fulfilled. ${
+                token2.sym.split(",")[1]
               } is ${marketPrice - reqPrice} above requested price.`
             );
             executeSell.push({
@@ -33,7 +33,7 @@ const priceCompare = async (rpc, contract, limits) => {
               token1Sym: token1.sym,
               token1tickr: token1.sym.split(",")[1],
               token1Contract: token1.contract,
-              token2sym: token2.sym,
+              token2Sym: token2.sym,
               token2tickr: token2.sym.split(",")[1],
               token2Contract: token2.contract,
               min_expected: minAmt.toString(),
@@ -53,11 +53,11 @@ const priceCompare = async (rpc, contract, limits) => {
           );
           const reqPrice = parseFloat(order.price.split(" ")[0]);
           const orderId = order.id;
-          if (marketPrice <= reqPrice) {
-            console.log(
-              `Order #${orderId} can be fulfilled. ${
-                token1.sym.split(",")[1]
-              } is ${(reqprice = marketPrice)} below requested price.`
+          if (marketPrice && reqPrice && (marketPrice <= reqPrice) ) {
+            logger.info(
+              `Buy Order #${orderId} can be fulfilled. ${
+                token2.sym.split(",")[1]
+              } is ${(reqPrice - marketPrice)} below requested price.`
             );
             executeBuy.push({
               marketId: id,
@@ -67,7 +67,7 @@ const priceCompare = async (rpc, contract, limits) => {
               token1Sym: token1.sym,
               token1tickr: token1.sym.split(",")[1],
               token1Contract: token1.contract,
-              token2sym: token2.sym,
+              token2Sym: token2.sym,
               token2tickr: token2.sym.split(",")[1],
               token2Contract: token2.contract,
               min_expected: minAmt.toString(),
