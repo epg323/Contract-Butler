@@ -1,8 +1,9 @@
-# Contract-Butler 🦾🧐
+## Contract-Butler 🦾🧐
 
 ### About:
 -------------------------------------------------------------------
   Contract-Butler is a bot that helps fulfill limit orders for IQ and PredIQt tokens.
+
 
 ### Features:
 -------------------------------------------------------------------
@@ -14,7 +15,8 @@
 5. Scans for orders every minute
 6. Tests are provided to give a simulation of a few trading scenarios
 
-## Installation
+
+### Installation
 
 ```
 npm install
@@ -22,7 +24,7 @@ npm install
 npm run dev
 ```
 
-## Testing
+### Testing
 ```
 npm run test
 
